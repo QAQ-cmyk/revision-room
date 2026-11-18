@@ -1,0 +1,96 @@
+{
+  "id": "demo",
+  "isDemo": true,
+  "mode": "screenshots",
+  "name": "苔港 · 界面评审示例",
+  "buildName": "预置演示",
+  "createdAt": "2026-11-15T16:00:00+08:00",
+  "endedAt": "2026-11-15T16:00:00+08:00",
+  "status": "complete",
+  "step": 5,
+  "stage": "示例报告",
+  "visionRequested": true,
+  "visualProvider": "示例解说",
+  "visualModel": "预置内容 · 无需 API",
+  "checks": [],
+  "events": [],
+  "summary": "这份示例展示如何把画面观察变成可执行的修改清单：收集提示挡住了玩家和前进方向；背包中，常用操作与丢弃操作的区分还可以更明确。",
+  "coverage": [
+    "这是自制的示意界面和预置解说，不是真实游戏测试，也不是 AI 实时输出。",
+    "通过高亮区域核对观察，再决定是否采纳建议；状态标记不能代替修改后的复测。"
+  ],
+  "screenshots": [
+    {
+      "id": "uploads/01",
+      "path": "hud.png",
+      "label": "探索 · 收集提示",
+      "width": 1280,
+      "height": 720,
+      "kind": "upload"
+    },
+    {
+      "id": "uploads/02",
+      "path": "inventory.png",
+      "label": "背包 · 物品操作",
+      "width": 1280,
+      "height": 720,
+      "kind": "upload"
+    }
+  ],
+  "visual": {
+    "summary": "预置示例",
+    "inspected_screenshots": [
+      "uploads/01",
+      "uploads/02"
+    ],
+    "strengths": [
+      "uploads/01 右上角把当前目标、收集数量和下一步地点放在一起，信息容易找到。",
+      "uploads/02 背包网格和物品说明分区明确，基础结构可以保留。"
+    ],
+    "limitations": [
+      "单张截图无法确定收集提示持续多久，也不能判断是否支持关闭。",
+      "无法从背包截图确认丢弃操作是否另有确认步骤。"
+    ],
+    "findings": []
+  },
+  "findings": [
+    {
+      "id": "demo-1",
+      "kind": "visual",
+      "state": "open",
+      "severity": "high",
+      "confidence": "high",
+      "title": "收集提示遮住角色与前进方向",
+      "observation": "中央的收集成功面板覆盖了角色上半身和通向灯塔的区域。",
+      "impact": "玩家阅读奖励时，无法同时看清角色前方的画面。",
+      "recommendation": "将提示移到画面上方或侧边，缩为一行奖励信息，避开角色和任务指引区域。",
+      "verify": "在相同收集场景重新截图，确认提示出现时角色与前方路线完整可见；再试玩确认显示时长。",
+      "screenshot_id": "uploads/01",
+      "region": {
+        "x": 32.3,
+        "y": 35.3,
+        "w": 35.8,
+        "h": 26.5
+      }
+    },
+    {
+      "id": "demo-2",
+      "kind": "visual",
+      "state": "open",
+      "severity": "medium",
+      "confidence": "medium",
+      "title": "“使用”和“丢弃”缺少视觉区分",
+      "observation": "背包右下角两个操作采用近似的颜色、尺寸和相邻位置。",
+      "impact": "从这张图看，玩家需要仔细读文字才能区分常用操作与可能损失物品的操作。是否有二次确认需要试玩核实。",
+      "recommendation": "突出“使用”，把“丢弃”设为次要操作并留出间距；结合实际流程决定是否需要确认。",
+      "verify": "修改后核对两个按钮的层级与距离，并试玩确认丢弃前的反馈是否清晰。",
+      "screenshot_id": "uploads/02",
+      "region": {
+        "x": 70.2,
+        "y": 74.3,
+        "w": 10.8,
+        "h": 6.9
+      }
+    }
+  ]
+}

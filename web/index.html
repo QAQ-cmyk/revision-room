@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Revision Room 修订室 · 有画面依据的游戏评审</title>
+  <meta name="description" content="导入游戏截图，连接你选择的 AI，把画面观察变成附带证据、修改建议和复测标准的清单。">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">跳到评审内容</a>
+  <aside class="rail">
+    <a class="brand" href="/" aria-label="修订室首页"><span class="brand-mark" aria-hidden="true">修</span><span>修订室<small>REVISION ROOM</small></span></a>
+    <div class="rail-rule"></div>
+    <p class="eyebrow rail-caption">工作台</p>
+    <nav aria-label="主要导航">
+      <button class="nav-item active" data-view="report"><span aria-hidden="true">◫</span>评审总览</button>
+      <button class="nav-item" data-view="gallery"><span aria-hidden="true">▧</span>证据画面 <b id="shot-count">0</b></button>
+      <button class="nav-item" data-view="history"><span aria-hidden="true">↶</span>检查历史</button>
+    </nav>
+    <div class="rail-bottom"><span class="status-dot" aria-hidden="true"></span><span id="connection">正在连接本机</span><p>游戏在本机运行<br>由你选择 AI 看图与建议</p></div>
+  </aside>
+  <main id="main">
+    <header class="page-heading"><div><p class="eyebrow">从真实画面开始修改</p><h1 id="page-title">让问题有据可查。</h1><p class="lead">导入游戏画面，交给你选择的 AI，得到有证据、能复测的修改建议。</p></div><span class="local-badge">本地工作台</span></header>
+    <section class="intake" aria-labelledby="intake-title">
+      <div class="intake-top"><div class="intake-title"><span class="step-no" aria-hidden="true">＋</span><div><h2 id="intake-title">放入要检查的游戏</h2><p id="mode-description">已接入《星潮漂流》Windows 版</p></div></div><button id="view-demo" class="text-button">先看示例报告 ↗</button></div>
+      <div class="capture-modes" role="group" aria-label="选择评审方式"><button data-mode="screenshots" aria-pressed="false">导入游戏截图</button><button data-mode="game" class="active" aria-pressed="true">星潮试玩</button><button data-mode="web" aria-pressed="false">网页试玩</button></div>
+      <div class="select-row game-only"><label class="sr-only" for="build">游戏版本</label><select id="build"><option value="">正在寻找本机游戏…</option></select><button id="pick" class="button secondary">选择游戏文件</button><button id="start" class="button primary" disabled>开始自动评审 <span aria-hidden="true">↗</span></button></div>
+      <div id="web-intake" hidden>
+        <div class="import-fields"><label for="web-preset">试玩路线<select id="web-preset"><option value="moss">苔港 · 打开与关闭背包</option><option value="rust">Rustfire · 进入泵站与暂停</option><option value="custom">自定义路线</option></select></label>
+        <label for="web-url">本机游戏网址<input id="web-url" type="url" spellcheck="false"></label></div>
+        <details class="path-details"><summary>查看或编辑操作步骤</summary>
+          <label for="web-route">路线 JSON</label><textarea id="web-route" rows="10" spellcheck="false"></textarea>
+          <p class="small muted">支持截图、点击、按键、长按、核对文字及检查元素是否完整落在窗口内。</p>
+        </details>
+        <div class="import-bottom"><p id="web-hint" class="small muted">将在独立 Edge 窗口中运行，全程无需 AI 密钥。</p><button id="web-start" class="button primary">开始网页试玩 ↗</button></div>
+      </div>
+      <div id="image-intake" hidden>
+        <div class="import-fields"><label>游戏 / 版本名称<input id="project-name" maxlength="100" value="我的游戏" placeholder="例如：海岛冒险 · 第三版"></label><label>希望检查什么 <span class="muted">选填</span><textarea id="game-context" rows="2" maxlength="6000" placeholder="说明游戏类型、玩家目标，或你想重点检查的界面。无需先自己找问题。"></textarea></label></div>
+        <input type="file" id="image-files" accept="image/png,image/jpeg,image/webp" multiple hidden>
+        <button id="choose-shots" class="drop-zone"><strong>把游戏截图拖到这里，或点击选择</strong><span>PNG、JPG、WebP · 最多 10 张 · 适用于任何游戏</span></button>
+        <div id="upload-preview" class="upload-preview" aria-live="polite"></div>
+        <div class="import-bottom"><p class="muted small">生成长边最多 1600 像素的评审副本，原图保持不变。</p><button id="start-images" class="button primary" disabled>评审这些画面 ↗</button></div>
+        <details class="path-details"><summary>已有这些截图的评审结果？</summary>
+          <p class="muted">选择原图后，可把评审要求和原图交给你常用的 AI，再把返回的 JSON 导入这里。文件名用于匹配证据。</p>
+          <button id="export-prompt" class="button secondary" disabled>下载给 AI 的评审要求</button>
+          <button id="choose-review" class="button secondary" disabled>导入已有评审</button>
+          <input id="review-file" type="file" accept=".json,application/json" hidden>
+        </details>
+      </div>
+      <div class="reviewer-row"><label for="reviewer">画面评审 AI</label><select id="reviewer"><option value="codex">Codex · 本机登录</option></select><button id="ai-settings" class="button secondary">管理 AI 接口</button></div>
+      <div class="intake-foot"><span id="model-status">正在检查 Codex 登录</span><span id="mode-safety">新建独立存档 · 只读游戏文件</span></div>
+      <p id="send-notice" class="send-notice">本轮选定的截图和检查摘要将交给 Codex，使用现有账户额度。</p>
+      <details class="path-details game-only"><summary>输入游戏路径 / 检查选项</summary><label for="game-path">游戏程序或完整游戏文件夹</label><input id="game-path" placeholder="D:\…\StarTide.exe" spellcheck="false"><label class="checkbox"><input id="use-vision" type="checkbox" checked>使用所选 AI 审阅本次截图</label><p class="muted">其他游戏需先接入自动操作流程。关闭画面评审后，只执行本机试玩检查。</p></details>
+      <button id="cancel" class="button danger" hidden>停止检查</button>
+    </section>
+    <div id="error" class="error" role="alert" hidden></div>
+    <section id="progress" class="progress-panel" aria-label="评审进度" hidden><div class="progress-top"><span class="pulse" aria-hidden="true"></span><strong id="progress-label">准备检查</strong><span id="elapsed"></span></div><ol id="steps"></ol><p id="progress-detail" class="muted"></p></section>
+    <div id="content" aria-busy="false"><section class="empty"><div class="empty-cross" aria-hidden="true">＋</div><h2>从画面，到下一次修改。</h2><p>放入截图，或运行已适配游戏的自动试玩，<br>把实际表现变成可核对的修改清单。</p><div class="empty-flow"><span>提供画面</span><i>→</i><span>AI 观察</span><i>→</i><span>修改与复测</span></div><p class="small muted">可以先看示例报告，了解一轮评审会得到什么。</p></section></div>
+    <footer>Revision Room · 修订室 <span>观察有依据，修改有方向。</span></footer>
+  </main>
+  <dialog id="lightbox" aria-label="放大查看证据截图"><div class="dialog-head"><strong id="lightbox-title"></strong><button class="icon-button" id="close-lightbox" aria-label="关闭截图">✕</button></div><img id="lightbox-image" alt=""><p id="lightbox-caption"></p></dialog>
+  <dialog id="ai-dialog" aria-labelledby="ai-title">
+    <div class="dialog-head"><div><p class="eyebrow">选择看图的伙伴</p><h2 id="ai-title">AI 接口</h2></div><button class="icon-button" id="close-ai" aria-label="关闭 AI 接口设置">✕</button></div>
+    <p class="settings-intro">Codex 继续使用本机登录。其他 AI 在这里填写各自的 API 密钥，可保存多套配置。</p>
+    <div class="profile-picker"><label for="profile-edit">已保存的接口</label><select id="profile-edit"><option value="">＋ 添加新接口</option></select></div>
+    <form id="profile-form" autocomplete="off">
+      <div class="settings-grid">
+        <label>服务商<select id="ai-preset"></select></label>
+        <label>显示名称<input id="ai-name" required maxlength="80" placeholder="例如：我的 Grok"></label>
+        <label class="wide">API 基础地址<input id="ai-url" required type="url" spellcheck="false" placeholder="https://服务商地址/v1"><small id="preset-hint">填写基础地址，无需在末尾加 /chat/completions。</small></label>
+        <label class="wide">视觉模型名称<input id="ai-model" required maxlength="150" spellcheck="false" placeholder="从服务商控制台复制支持图片的模型名称"></label>
+        <label class="wide">API 密钥<input id="ai-key" type="password" autocomplete="new-password" spellcheck="false" placeholder="粘贴此服务商的 API 密钥"><small id="key-hint">使用当前 Windows 账户加密保存；不会写进报告或浏览器存储。</small></label>
+      </div>
+      <details class="api-advanced"><summary>接口格式与输出设置</summary><div class="settings-grid">
+        <label>接口格式<select id="ai-protocol"><option value="openai">OpenAI 兼容 · Chat Completions</option><option value="anthropic">Claude · Messages</option></select></label>
+        <label>输出上限<input id="ai-tokens" type="number" min="1024" max="32768" step="1" value="8192" required></label>
+        <label>输出参数<select id="ai-token-param"><option value="max_tokens">max_tokens · 多数兼容接口</option><option value="max_completion_tokens">max_completion_tokens · OpenAI</option></select></label>
+        <label class="checkbox"><input id="ai-no-key" type="checkbox">本机服务无需密钥</label>
+      </div></details>
+      <p class="settings-note">请选择能看图的模型。测试会发送一张简单色块图；正式评审会发送最多 10 张游戏截图和检查摘要。API 按服务商规则计费，与网页订阅额度分开。</p>
+      <div id="ai-result" class="api-result" role="status" hidden></div>
+      <div class="settings-actions"><button type="button" id="delete-profile" class="text-button" hidden>移除此配置</button><button type="button" id="test-profile" class="button secondary">测试看图</button><button type="submit" id="save-profile" class="button primary">保存并选用</button></div>
+    </form>
+  </dialog>
+  <div id="toast" role="status" class="toast" hidden></div>
+</body>
+</html>

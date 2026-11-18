@@ -1,0 +1,22 @@
+# Local evidence and user data must not enter the public repository.
+/runs/
+/original/
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+!.env.example
+*profiles*.json
+*.log
+*.zip
+.playwright-mcp/
+tests/*.png
+tests/*.json
+tests/*.jsonl
+tests/*.md
+tests/demo-script.js
+/dist/
+/release/
+.DS_Store
+Thumbs.db

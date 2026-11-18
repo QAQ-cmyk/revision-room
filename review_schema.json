@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "summary": {"type": "string"},
+    "strengths": {"type": "array", "items": {"type": "string"}},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "properties": {
+          "severity": {"type": "string", "enum": ["high", "medium", "low"]},
+          "title": {"type": "string"},
+          "observation": {"type": "string"},
+          "impact": {"type": "string"},
+          "recommendation": {"type": "string"},
+          "verify": {"type": "string"},
+          "confidence": {"type": "string", "enum": ["high", "medium"]},
+          "screenshot_id": {"type": "string"},
+          "region": {
+            "type": "object", "additionalProperties": false,
+            "properties": {"x": {"type": "number"}, "y": {"type": "number"}, "w": {"type": "number"}, "h": {"type": "number"}},
+            "required": ["x", "y", "w", "h"]
+          }
+        },
+        "required": ["severity", "title", "observation", "impact", "recommendation", "verify", "confidence", "screenshot_id", "region"]
+      }
+    },
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "inspected_screenshots": {"type": "array", "items": {"type": "string"}}
+  },
+  "required": ["summary", "strengths", "findings", "limitations", "inspected_screenshots"]
+}
