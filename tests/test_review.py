@@ -19,7 +19,7 @@ import server
 class ReviewTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
-        self.root = Path(self.temp.name)
+        self.root = Path(self.temp.name).resolve()
         self.worker = engine.ReviewEngine(self.root)
 
     def tearDown(self):
