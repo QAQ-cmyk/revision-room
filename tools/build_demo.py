@@ -17,7 +17,8 @@ def main():
     images={name:"data:image/png;base64,"+base64.b64encode((web/"demo"/name).read_bytes()).decode() for name in ["hud.png","inventory.png"]}
     css=(web/"style.css").read_text(encoding="utf-8")
     js=(web/"app.js").read_text(encoding="utf-8")
-    icon="data:image/svg+xml;base64,"+base64.b64encode((web/"favicon.svg").read_bytes()).decode()
+    svg=(web/"favicon.svg").read_text(encoding="utf-8")
+    icon="data:image/svg+xml;base64,"+base64.b64encode(svg.encode("utf-8")).decode()
     page=page.replace('href="/favicon.svg"',f'href="{icon}"').replace('href="/" aria-label="修订室首页"','href="#main" aria-label="修订室首页"')
     page=page.replace('<link rel="stylesheet" href="/style.css">',"<style>"+css+"</style>")
     page=page.replace('  <script src="/app.js" defer></script>\n',"")
